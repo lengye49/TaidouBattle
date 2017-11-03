@@ -1,0 +1,51 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MovementHandler : MonoBehaviour {
+
+    private float timeOfMovement = 0.5f;
+    private float timeWaitToShow = 0.2f;
+
+    /// <summary>
+    /// Shows a panel.
+    /// </summary>
+    /// <param name="newPanel">New panel.</param>
+    public void ShowPanel(GameObject newPanel){
+        newPanel.SetActive(true);
+        newPanel.transform.localScale = Vector3.zero;
+        Hashtable args = new Hashtable();
+        args.Add("scale",new Vector3(1,1,1));
+        args.Add("time", timeOfMovement);
+        args.Add("loopType", iTween.LoopType.none);
+        iTween.ScaleTo(newPanel, args);
+    }
+        
+    /// <summary>
+    /// Hides a panel.
+    /// </summary>
+    /// <param name="oldPanel">Old panel.</param>
+    public void HidePanel(GameObject oldPanel){
+        Hashtable args = new Hashtable();
+        args.Add("scale",Vector3.zero);
+        args.Add("time", timeOfMovement);
+        args.Add("loopType", iTween.LoopType.none);
+        iTween.ScaleTo(oldPanel, args);
+        oldPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// Hides an old panel and show a new one.
+    /// </summary>
+    /// <param name="oldPanel">Old panel.</param>
+    /// <param name="newPanel">New panel.</param>
+    public void ChangePanel(GameObject oldPanel,GameObject newPanel){
+        HidePanel(oldPanel);
+        StartCoroutine(WaitAndShowNewPanel(newPanel));
+    }
+
+    IEnumerator WaitAndShowNewPanel(GameObject newPanel){
+        yield return new WaitForSeconds(timeWaitToShow);
+        ShowPanel(newPanel);
+    }
+}
