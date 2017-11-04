@@ -8,9 +8,12 @@ public class StartMenuController : MonoBehaviour {
     public GameObject registerPanel;
     public GameObject loginPanel;
     public GameObject serverPanel;
-    private MovementHandler _move;
+    public GameObject charSelectPanel;
+    public GameObject charCreatePanel;
 
-	// Use this for initialization
+    private MovementHandler _move;
+    private int thisCharIndex;
+
 	void Start () {
         _move = GetComponent<MovementHandler>();
         _move.ShowPanel(startPanel);
@@ -25,8 +28,7 @@ public class StartMenuController : MonoBehaviour {
     }
 
     public void OnStartGame(){
-        //开始游戏
-        //ToDo
+        _move.ChangePanel(startPanel, charSelectPanel);
     }
 
     public void OnConfirmUser(){
@@ -59,5 +61,50 @@ public class StartMenuController : MonoBehaviour {
 
     public void OnCloseServer(){
         _move.ChangePanel(serverPanel, startPanel);
+    }
+
+    public void OnEnterGame(){
+        //进入游戏
+    }
+
+    public void OnCreateChar(){
+        _move.ChangePanel(charSelectPanel, charCreatePanel);
+        thisCharIndex = 0;
+    } 
+
+    public void OnNextChar(){
+        if (thisCharIndex < GameConfigs.SchoolList.Length - 1)
+        {
+            thisCharIndex++;
+        }
+        else
+        {
+            thisCharIndex = 0;
+        }
+            
+        _move.ShowCharacter(thisCharIndex, true, charCreatePanel.transform);
+    }
+
+    public void OnLastChar(){
+        if (thisCharIndex > 0)
+        {
+            thisCharIndex--;
+        }
+        else
+        {
+            thisCharIndex = GameConfigs.SchoolList.Length - 1;
+        }
+
+        _move.ShowCharacter(thisCharIndex, false, charCreatePanel.transform);
+    }
+
+
+    public void OnConfirmCreateChar(){
+        _move.ChangePanel(charCreatePanel, charSelectPanel);
+
+    }
+
+    public void OnReturnFromCharCreate(){
+        _move.ChangePanel(charCreatePanel, charSelectPanel);
     }
 }
