@@ -14,6 +14,7 @@ public class StartMenuController : MonoBehaviour {
     public GameObject charCreatePanel;
 
     public GameObject[] charSelect;
+    public Text[] t_CharSelect;
     public Image[] imgCharCreate;
     public Text[] t_CharCreate;
 
@@ -35,6 +36,21 @@ public class StartMenuController : MonoBehaviour {
 
     public void OnStartGame(){
         _move.ChangePanel(startPanel, charSelectPanel);
+        UpdateCharSelectPanel();
+    }
+
+    void UpdateCharSelectPanel(){
+        for (int i = 0; i < charSelect.Length; i++)
+        {
+            if (i == DataHandler.Instance._playerInfo.School)
+                charSelect[i].SetActive(true);
+            else
+                charSelect[i].SetActive(false);
+        }
+        t_CharSelect[0].text = GameConfigs.SchoolNames[DataHandler.Instance._playerInfo.School];
+        t_CharSelect[1].text = "Lv." + DataHandler.Instance._playerInfo.Lv;
+        t_CharSelect[2].text = "公告";
+        t_CharSelect[3].text = DataHandler.Instance.gameNotice;
     }
 
     public void OnConfirmUser(){
@@ -120,14 +136,12 @@ public class StartMenuController : MonoBehaviour {
         if (thisCharIndex > GameConfigs.SchoolList.Length - 1)
             thisCharIndex = 0;
     }
-
-    void SetCharCreateInfo(){
         
-    }
 
     public void OnConfirmCreateChar(){
         _move.ChangePanel(charCreatePanel, charSelectPanel);
-
+        DataHandler.Instance._playerInfo.School = thisCharIndex;
+        UpdateCharSelectPanel();
     }
 
     public void OnReturnFromCharCreate(){
