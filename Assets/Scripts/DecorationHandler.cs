@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class DecorationHandler : MonoBehaviour {
 
@@ -13,11 +14,7 @@ public class DecorationHandler : MonoBehaviour {
         int rTime = Random.Range(12, 16);
 
         transform.localPosition = new Vector3(rLeft, transform.localPosition.y, 0);
-        Hashtable args = new Hashtable();
-        args.Add("time", rTime);
-        args.Add("loopType", "pingpong");
-        args.Add("x", rRight);
-        args.Add("easeType", iTween.EaseType.linear);
-        iTween.MoveTo(this.gameObject, args);
+        transform.DOLocalMoveX(rRight, rTime).SetLoops(-1);
+
 	}
 }

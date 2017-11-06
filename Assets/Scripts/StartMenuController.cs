@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class StartMenuController : MonoBehaviour {
 
@@ -10,6 +12,10 @@ public class StartMenuController : MonoBehaviour {
     public GameObject serverPanel;
     public GameObject charSelectPanel;
     public GameObject charCreatePanel;
+
+    public GameObject[] charSelect;
+    public Image[] imgCharCreate;
+    public Text[] t_CharCreate;
 
     private MovementHandler _move;
     private int thisCharIndex;
@@ -72,32 +78,52 @@ public class StartMenuController : MonoBehaviour {
         thisCharIndex = 0;
     } 
 
-    public void OnNextChar(){
-        if (thisCharIndex < GameConfigs.SchoolList.Length - 1)
+    public void OnChangeChar(bool next){
+        int lastIndex = thisCharIndex;
+        SetChisCharIndex(next);
+
+        float x = !next ? -853f : 0f;
+        imgCharCreate[thisCharIndex].transform.localPosition = new Vector3(x, -62f, 0f);
+
+        x = -479f;
+        imgCharCreate[thisCharIndex].DOFade(1f, 0.5f);
+        imgCharCreate[thisCharIndex].transform.DOLocalMoveX(x, 0.5f);
+
+        x = !next ? 0f : -853f;
+        imgCharCreate[lastIndex].DOFade(0f, 0.5f);
+        imgCharCreate[lastIndex].transform.DOLocalMoveX(x, 0.5f);
+
+        t_CharCreate[0].text = GameConfigs.SchoolNames[thisCharIndex];
+        t_CharCreate[1].text = GameConfigs.SchoolDescs[thisCharIndex];
+        t_CharCreate[2].text = GameConfigs.SchoolNames[thisCharIndex];
+        int n = 0;
+        if (next)
         {
-            thisCharIndex++;
+            n = thisCharIndex + 1 > GameConfigs.SchoolList.Length - 1 ? 0 : thisCharIndex + 1;
+            t_CharCreate[3].text ="<<" +GameConfigs.SchoolNames[lastIndex];
+            t_CharCreate[4].text =  GameConfigs.SchoolNames[n]+">>";
+
         }
         else
         {
-            thisCharIndex = 0;
+            n = thisCharIndex - 1 < 0 ? GameConfigs.SchoolList.Length - 1 : thisCharIndex - 1;
+            t_CharCreate[3].text = "<<" + GameConfigs.SchoolNames[n];
+            t_CharCreate[4].text = GameConfigs.SchoolNames[lastIndex] + ">>";
         }
-            
-        _move.ShowCharacter(thisCharIndex, true, charCreatePanel.transform);
+        
     }
 
-    public void OnLastChar(){
-        if (thisCharIndex > 0)
-        {
-            thisCharIndex--;
-        }
-        else
-        {
+    void SetChisCharIndex(bool next){
+        thisCharIndex = next ? (thisCharIndex + 1) : (thisCharIndex - 1);
+        if (thisCharIndex < 0)
             thisCharIndex = GameConfigs.SchoolList.Length - 1;
-        }
-
-        _move.ShowCharacter(thisCharIndex, false, charCreatePanel.transform);
+        if (thisCharIndex > GameConfigs.SchoolList.Length - 1)
+            thisCharIndex = 0;
     }
 
+    void SetCharCreateInfo(){
+        
+    }
 
     public void OnConfirmCreateChar(){
         _move.ChangePanel(charCreatePanel, charSelectPanel);
