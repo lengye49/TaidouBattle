@@ -9,8 +9,20 @@ public class GameControl : Singleton<GameControl> {
     
     protected GameControl(){} //Guarantee this will be always a singleton only - can't use the constructor!
 
+    public delegate void PlayerInfoChange(string infoType);
+    public static PlayerInfoChange _playerInfoChange;
+
+    void Start(){
+        
+    }
+
+
+    public int energy;
+    public int battleEnergy;
     public float health = 100f;
-    public float exp = 50f;
+    public int exp = 50;
+
+
 
     #region SaveData
     public void Save(){
@@ -44,5 +56,5 @@ public class GameControl : Singleton<GameControl> {
 [Serializable]
 class PlayerData{
     public float health;
-    public float exp;
+    public int exp;
 }
